@@ -13,11 +13,11 @@ def main(prototxt_filepath, caffenet_filepath):
 	can_bus = can.Bus(interface='socketcan', channel='vcan0',
 						 receive_own_messages=True)
 	can_msg_lost_camera = can.Message(arbitration_id=0x018, is_extended_id=True, 
-											     data=[0, 0, 0, 0, 0, 0, 0, 0])
+					  data=[0, 0, 0, 0, 0, 0, 0, 0])
 	can_msg_person_is_here = can.Message(arbitration_id=0x018, is_extended_id=True,
-												    data=[1, 0, 0, 0, 0, 0, 0, 0])
+					     data=[1, 0, 0, 0, 0, 0, 0, 0])
 	can_msg_person_is_nearly = can.Message(arbitration_id=0x018, is_extended_id=True,
-													data=[1, 1, 0, 0, 0, 0, 0, 0])
+					       data=[1, 1, 0, 0, 0, 0, 0, 0])
 
 	# Camera initialization block
 	print("Connecting to camera...")
@@ -38,12 +38,9 @@ def main(prototxt_filepath, caffenet_filepath):
 					"dog", "horse", "motorbike", "person", "pottedplant", "sheep",
 					"sofa", "train", "tvmonitor"]
 	colors_for_net = np.random.uniform(0, 255, size=(len(net_classes), 3))
-	limit_for_confidence = 0.6
-	neural_net = cv2.dnn.readNetFromCaffe(prototxt_filepath,
-														caffenet_filepath)
-	
+	limit_for_confidence = 0.8
+	neural_net = cv2.dnn.readNetFromCaffe(prototxt_filepath, caffenet_filepath)
 	cnt_inc = 0
-
 	# Main cycle block
 	while cap.isOpened():
 		# loop the frame and convert it to RGB-format
@@ -52,8 +49,8 @@ def main(prototxt_filepath, caffenet_filepath):
 
 		# Grab the frame dimensions and convert it to a blob
 		(h, w) = frame.shape[:2]
-		blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)), 
-											0.007843, (300, 300), 127.5)
+		blob = cv2.dnn.blobFromImage(cv2.resize(frame, (300, 300)),
+					     0.007843, (300, 300), 127.5)
 		
 		# Pass the blob through the network and obtain the detections and predictions
 		neural_net.setInput(blob)
